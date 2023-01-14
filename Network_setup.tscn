@@ -1,0 +1,59 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Base_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Network_setup.gd" type="Script" id=2]
+
+[node name="Network_setup" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="Multiplayer_configure" type="Control" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+
+[node name="Create_server" type="Button" parent="Multiplayer_configure"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -267.5
+margin_top = -202.0
+margin_right = 267.5
+margin_bottom = -26.0
+custom_fonts/font = ExtResource( 1 )
+text = "Create Server"
+
+[node name="Join_server" type="Button" parent="Multiplayer_configure"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -267.5
+margin_top = 24.0
+margin_right = 267.5
+margin_bottom = 200.0
+custom_fonts/font = ExtResource( 1 )
+text = "Create Server"
+
+[node name="Server_ip_address" type="LineEdit" parent="Multiplayer_configure"]
+margin_left = 537.5
+margin_top = 117.0
+margin_right = 1382.5
+margin_bottom = 221.0
+custom_fonts/font = ExtResource( 1 )
+text = "enter IP adress"
+align = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Device_ip_address" type="Label" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -150.0
+custom_fonts/font = ExtResource( 1 )
+align = 1
+
+[connection signal="pressed" from="Multiplayer_configure/Create_server" to="." method="_on_Create_server_pressed"]
+[connection signal="pressed" from="Multiplayer_configure/Join_server" to="." method="_on_Join_server_pressed"]
