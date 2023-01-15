@@ -36,12 +36,13 @@ margin_bottom = 200.0
 custom_fonts/font = ExtResource( 1 )
 text = "Join Server"
 
-[node name="Server_ip_address" type="LineEdit" parent="Multiplayer_configure"]
+[node name="Username_text_edit" type="LineEdit" parent="Multiplayer_configure"]
 margin_left = 537.5
 margin_top = 117.0
 margin_right = 1382.5
 margin_bottom = 221.0
 custom_fonts/font = ExtResource( 1 )
+text = "enter username"
 align = 1
 placeholder_text = "enter IP adress"
 
@@ -55,5 +56,14 @@ margin_top = -150.0
 custom_fonts/font = ExtResource( 1 )
 align = 1
 
+[node name="Start_game" type="Button" parent="CanvasLayer"]
+margin_left = 27.0
+margin_top = 27.0
+margin_right = 391.0
+margin_bottom = 158.0
+custom_fonts/font = ExtResource( 1 )
+text = "Start Game"
+
 [connection signal="pressed" from="Multiplayer_configure/Create_server" to="." method="_on_Create_server_pressed"]
 [connection signal="pressed" from="Multiplayer_configure/Join_server" to="." method="_on_Join_server_pressed"]
+[connection signal="pressed" from="CanvasLayer/Start_game" to="." method="_on_Start_game_pressed"]

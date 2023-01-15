@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Ships.png" type="Texture" id=1]
+[ext_resource path="res://kenney_piratepack/Spritesheet/shipsMiscellaneous_sheet.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
@@ -8,15 +8,19 @@ radius = 60.0
 height = 75.0
 
 [node name="Player" type="KinematicBody2D"]
+rotation = -1.5708
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.5, 0.5 )
+rotation = -1.5708
+scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 545, 1410, 270, 550 )
+region_rect = Rect2( 0, 306, 66, 115 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+scale = Vector2( 0.8, 0.8 )
 shape = SubResource( 1 )
 
 [node name="Tween" type="Tween" parent="."]
@@ -25,4 +29,14 @@ shape = SubResource( 1 )
 wait_time = 0.05
 autostart = true
 
+[node name="Reload_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Shoot_point_left" type="Position2D" parent="."]
+position = Vector2( 0, -50 )
+
+[node name="Shoot_point_right" type="Position2D" parent="."]
+position = Vector2( 0, 50 )
+
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_Network_tick_rate_timeout"]
+[connection signal="timeout" from="Reload_timer" to="." method="_on_Reload_timer_timeout"]

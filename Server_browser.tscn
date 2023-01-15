@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Base_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Server_listener.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Server_browser.gd" type="Script" id=3]
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -37,6 +39,7 @@ tracks/0/keys = {
 [node name="Server_browser" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 3 )
 
 [node name="Background_panel" type="Panel" parent="."]
 anchor_right = 1.0
@@ -129,3 +132,11 @@ custom_fonts/font = ExtResource( 1 )
 text = "Server Browser"
 align = 1
 valign = 1
+
+[node name="Server_listener" parent="." instance=ExtResource( 2 )]
+
+[connection signal="pressed" from="Background_panel/Manual_setup" to="." method="_on_Manual_setup_pressed"]
+[connection signal="pressed" from="Background_panel/Go_back" to="." method="_on_Go_back_pressed"]
+[connection signal="pressed" from="Background_panel/Server_ip_text_edit/Join_server" to="." method="_on_Join_server_pressed"]
+[connection signal="new_server" from="Server_listener" to="." method="_on_Server_listener_new_server"]
+[connection signal="remove_server" from="Server_listener" to="." method="_on_Server_listener_remove_server"]
