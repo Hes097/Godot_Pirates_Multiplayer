@@ -34,7 +34,7 @@ margin_top = 24.0
 margin_right = 267.5
 margin_bottom = 200.0
 custom_fonts/font = ExtResource( 1 )
-text = "Create Server"
+text = "Join Server"
 
 [node name="Server_ip_address" type="LineEdit" parent="Multiplayer_configure"]
 margin_left = 537.5
@@ -42,8 +42,8 @@ margin_top = 117.0
 margin_right = 1382.5
 margin_bottom = 221.0
 custom_fonts/font = ExtResource( 1 )
-text = "enter IP adress"
 align = 1
+placeholder_text = "enter IP adress"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
