@@ -60,7 +60,7 @@ func _on_Join_server_pressed():
 		multiplayer_config_ui.hide()
 		username_text_edit.hide()
 		
-		Global.instance_node(load("res://Server_browser.tscn"), self)
+		#Global.instance_node(load("res://Server_browser.tscn"), self)
 
 func _connected_to_server() -> void:
 	yield(get_tree().create_timer(0.1), "timeout")

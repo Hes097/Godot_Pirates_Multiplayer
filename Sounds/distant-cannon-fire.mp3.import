@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/distant-cannon-fire.mp3-7e43921b77a9dd43b578e53142d37ae5.mp3str"
+
+[deps]
+
+source_file="res://Sounds/distant-cannon-fire.mp3"
+dest_files=[ "res://.import/distant-cannon-fire.mp3-7e43921b77a9dd43b578e53142d37ae5.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
