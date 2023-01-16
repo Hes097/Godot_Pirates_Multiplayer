@@ -11,5 +11,5 @@ dest_files=[ "res://.import/cannon-ball.mp3-4d30fbfad112c2d11fc3bc8f0b319636.mp3
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
