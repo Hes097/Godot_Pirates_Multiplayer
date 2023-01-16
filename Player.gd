@@ -3,6 +3,9 @@ extends KinematicBody2D
 puppet var speed = 0
 var is_speeding_up = false
 
+var health_points = 100 setget set_health_points
+
+puppet var puppet_health_points = 100 setget puppet_health_points_set
 puppet var rotation_velocity = 0
 puppet var ship_turn_right = false
 puppet var ship_turn_left = false
@@ -23,11 +26,12 @@ onready var sprite = $Sprite
 onready var reload_timer = $Reload_timer
 onready var shoot_point_left = $Shoot_point_left
 onready var shoot_point_right = $Shoot_point_right
-#onready var hit_timer = $Hit_timer
+onready var hit_timer = $Hit_timer
 onready var cannon_fire_sound = $Cannon_fire_sound
 onready var first_shot_timer = $First_shot_timer
 onready var second_shot_timer = $Second_shot_timer
 onready var third_shot_timer = $Third_shot_timer
+
 
 puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
 puppet var puppet_velocity = Vector2()
@@ -109,6 +113,10 @@ func _process(delta: float) -> void:
 #	
 	else:
 		rotation_degrees = lerp(rotation_degrees, puppet_rotation, delta * 8)
+	
+	if health_points <= 0:
+		if get_tree().is_network_server():
+			rpc("destroy")
 		
 		#if not tween.is_active():
 			#move_and_slide(puppet_velocity * speed)
@@ -188,5 +196,36 @@ func _on_Third_shot_timer_timeout():
 	#third_shot_timer.stop()
 
 
-func _on_Cannon_fire_sound_finished():
-	print("Sound ist over")
+func set_health_points(new_value):
+	health_points = new_value
+	
+	if is_network_master():
+		rset("puppet_health_points", health_points)
+
+func puppet_health_points_set(new_value):
+	puppet_health_points = new_value
+	
+	if not is_network_master():
+		health_points = puppet_health_points
+
+func _on_Hit_timer_timeout():
+	modulate = Color(1, 1, 1, 1)
+
+
+func _on_Hitbox_area_entered(area):
+	if get_tree().is_network_server():
+		if area.is_in_group("Ship_destroyer") and area.get_parent().player_owner != int(name):
+			rpc("hit_by_cannon_ball", area.get_parent().damage)
+			
+			area.get_parent().rpc("destroy")
+
+sync func hit_by_cannon_ball(damage):
+	health_points -= damage
+	modulate = Color(1, 0, 0, 1)
+	hit_timer.start()
+
+sync func destroy() -> void:
+	visible = false
+	$CollisionShape2D.disabled = true
+	$Hitbox/CollisionShape2D.disabled = true
+
