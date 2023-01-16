@@ -38,7 +38,12 @@ puppet var puppet_velocity = Vector2()
 puppet var puppet_rotation = 0
 
 
-#func _ready():
+func _ready():
+	
+	yield(get_tree(), "idle_frame")
+	if is_network_master():
+		Global.player_master = self
+	
 #
 #	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
 #
@@ -52,7 +57,7 @@ func _process(delta: float) -> void:
 #	if get_tree().has_network_peer():
 #		if is_network_master() and visible:
 			
-	if is_network_master():	
+	if is_network_master() and visible:	
 		
 #		if cannon_fire_sound.playing and first_shot_timer.time_left == 0:
 #			cannon_fire_sound.stop()
@@ -176,6 +181,9 @@ sync func instance_cannon_ball(id):
 
 	Network.networked_object_name_index += 1
 
+sync func update_position(pos):
+	global_position = pos
+	puppet_position = pos
 
 func _on_Reload_timer_timeout():
 	is_reloading = false
@@ -228,4 +236,11 @@ sync func destroy() -> void:
 	visible = false
 	$CollisionShape2D.disabled = true
 	$Hitbox/CollisionShape2D.disabled = true
+	
+	if is_network_master():
+		Global.player_master = null
+		
+func _exit_tree() -> void:
+	if is_network_master():
+		Global.player_master = null
 
