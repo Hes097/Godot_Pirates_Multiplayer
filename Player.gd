@@ -3,9 +3,9 @@ extends KinematicBody2D
 var speed = 0
 var is_speeding_up = false
 
-var rotation_velocity = 0
-var ship_turn_right = false
-var ship_turn_left = false
+puppet var rotation_velocity = 0
+puppet var ship_turn_right = false
+puppet var ship_turn_left = false
 
 var velocity = Vector2(0, 0)
 var rotation_dir = 0
@@ -29,7 +29,7 @@ puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
 puppet var puppet_velocity = Vector2()
 puppet var puppet_rotation = 0
 
-#onready var tween = $Tween
+
 
 #Neue Bewegungssteuerung: Es gann durch rechts und links rotiert werden und durch UP vorwärtsgefahren werden
 func get_input():

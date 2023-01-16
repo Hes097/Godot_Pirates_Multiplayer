@@ -42,9 +42,8 @@ margin_top = 117.0
 margin_right = 1382.5
 margin_bottom = 221.0
 custom_fonts/font = ExtResource( 1 )
-text = "enter username"
 align = 1
-placeholder_text = "enter IP adress"
+placeholder_text = "enter username"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
