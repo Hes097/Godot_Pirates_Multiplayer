@@ -35,6 +35,7 @@ puppet var puppet_rotation = 0
 
 
 #func _ready():
+#
 #	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
 #
 #	yield(get_tree(), "idle_frame")
@@ -48,6 +49,13 @@ func _process(delta: float) -> void:
 #		if is_network_master() and visible:
 			
 	if is_network_master():	
+		
+#		if cannon_fire_sound.playing and first_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
+#		elif cannon_fire_sound.playing and second_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
+#		elif cannon_fire_sound.playing and third_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
 		
 		# Mit Q oder E schießen
 		if Input.is_action_pressed("click") and can_shoot and not is_reloading:
@@ -167,11 +175,18 @@ func _on_Reload_timer_timeout():
 func _on_First_shot_timer_timeout():
 	cannon_fire_sound.set_pitch_scale(rand_range(1, 1.2))
 	cannon_fire_sound.play()
+	#first_shot_timer.stop()
 
 func _on_Second_shot_timer_timeout():
 	cannon_fire_sound.set_pitch_scale(rand_range(0.8, 0.9))
 	cannon_fire_sound.play()
+	#second_shot_timer.stop()
 
 func _on_Third_shot_timer_timeout():
 	cannon_fire_sound.set_pitch_scale(rand_range(0.6, 0.7))
 	cannon_fire_sound.play()
+	#third_shot_timer.stop()
+
+
+func _on_Cannon_fire_sound_finished():
+	print("Sound ist over")

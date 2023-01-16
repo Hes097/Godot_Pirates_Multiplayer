@@ -57,6 +57,7 @@ one_shot = true
 
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_Network_tick_rate_timeout"]
 [connection signal="timeout" from="Reload_timer" to="." method="_on_Reload_timer_timeout"]
+[connection signal="finished" from="Cannon_fire_sound" to="." method="_on_Cannon_fire_sound_finished"]
 [connection signal="timeout" from="First_shot_timer" to="." method="_on_First_shot_timer_timeout"]
 [connection signal="timeout" from="Second_shot_timer" to="." method="_on_Second_shot_timer_timeout"]
 [connection signal="timeout" from="Third_shot_timer" to="." method="_on_Third_shot_timer_timeout"]

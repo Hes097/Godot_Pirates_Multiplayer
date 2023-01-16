@@ -11,5 +11,5 @@ dest_files=[ "res://.import/distant-cannon-fire.mp3-7e43921b77a9dd43b578e53142d3
 
 [params]
 
-loop=true
+loop=false
 loop_offset=0
