@@ -45,10 +45,6 @@ func _process(delta: float) -> void:
 			
 	if is_network_master():	
 		
-		
-
-		
-		
 		# Mit Q oder E schießen
 		if Input.is_action_pressed("click") and can_shoot and not is_reloading:
 				rpc("instance_cannon_ball", get_tree().get_network_unique_id())
