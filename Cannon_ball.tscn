@@ -13,7 +13,7 @@ region_enabled = true
 region_rect = Rect2( 119, 28, 12, 12 )
 script = ExtResource( 2 )
 
-[node name="Hitbox" type="Area2D" parent="." groups=["Ship_destroyer"]]
+[node name="Hitbox" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 visible = false

@@ -54,20 +54,8 @@ one_shot = true
 wait_time = 0.3
 one_shot = true
 
-[node name="Hit_timer" type="Timer" parent="."]
-
-[node name="Hitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-rotation = 1.5708
-scale = Vector2( 0.8, 0.8 )
-shape = SubResource( 1 )
-
 [connection signal="timeout" from="Network_tick_rate" to="." method="_on_Network_tick_rate_timeout"]
 [connection signal="timeout" from="Reload_timer" to="." method="_on_Reload_timer_timeout"]
-[connection signal="finished" from="Cannon_fire_sound" to="." method="_on_Cannon_fire_sound_finished"]
 [connection signal="timeout" from="First_shot_timer" to="." method="_on_First_shot_timer_timeout"]
 [connection signal="timeout" from="Second_shot_timer" to="." method="_on_Second_shot_timer_timeout"]
 [connection signal="timeout" from="Third_shot_timer" to="." method="_on_Third_shot_timer_timeout"]
-[connection signal="timeout" from="Hit_timer" to="." method="_on_Hit_timer_timeout"]
-[connection signal="area_entered" from="Hitbox" to="." method="_on_Hitbox_area_entered"]
