@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/cannon-ball.mp3-4d30fbfad112c2d11fc3bc8f0b319636.mp3str"
+
+[deps]
+
+source_file="res://Sounds/cannon-ball.mp3"
+dest_files=[ "res://.import/cannon-ball.mp3-4d30fbfad112c2d11fc3bc8f0b319636.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

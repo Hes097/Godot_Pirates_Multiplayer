@@ -2,6 +2,7 @@ extends Sprite
 
 var velocity = Vector2(1, 0)
 var player_rotation
+onready var splash_sound = $Splash_sound
 
 export(int) var speed = 1400
 export(int) var damage = 25

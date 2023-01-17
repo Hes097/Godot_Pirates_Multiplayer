@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/harboursound.mp3-48a874653d0347f67f4def3e16bf993c.mp3str"
+
+[deps]
+
+source_file="res://Sounds/harboursound.mp3"
+dest_files=[ "res://.import/harboursound.mp3-48a874653d0347f67f4def3e16bf993c.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

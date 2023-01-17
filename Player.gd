@@ -1,8 +1,11 @@
 extends KinematicBody2D
 
-var speed = 0
+puppet var speed = 0
 var is_speeding_up = false
 
+var health_points = 100 setget set_health_points
+
+puppet var puppet_health_points = 100 setget puppet_health_points_set
 puppet var rotation_velocity = 0
 puppet var ship_turn_right = false
 puppet var ship_turn_left = false
@@ -13,6 +16,8 @@ var rotation_dir = 0
 var cannon_ball = load("res://Cannon_ball.tscn")
 var can_shoot = true
 var is_reloading = false
+#var shot_number = 0
+
 
 export (float) var rotation_speed = 1.5
 
@@ -22,7 +27,10 @@ onready var reload_timer = $Reload_timer
 onready var shoot_point_left = $Shoot_point_left
 onready var shoot_point_right = $Shoot_point_right
 onready var hit_timer = $Hit_timer
-
+onready var cannon_fire_sound = $Cannon_fire_sound
+onready var first_shot_timer = $First_shot_timer
+onready var second_shot_timer = $Second_shot_timer
+onready var third_shot_timer = $Third_shot_timer
 
 
 puppet var puppet_position = Vector2(0, 0) setget puppet_position_set
@@ -30,83 +38,92 @@ puppet var puppet_velocity = Vector2()
 puppet var puppet_rotation = 0
 
 
+func _ready():
+	
+	#Global.alive_players.append(self)
+	
+	yield(get_tree(), "idle_frame")
+	if is_network_master():
+		Global.player_master = self
+	
+#
+#	get_tree().connect("network_peer_connected", self, "_network_peer_connected")
+#
+#	yield(get_tree(), "idle_frame")
+#	if get_tree().has_network_peer():
+#		if is_network_master():
+#			Global.player_master =  self
 
-#Neue Bewegungssteuerung: Es gann durch rechts und links rotiert werden und durch UP vorwärtsgefahren werden
-func get_input():
-	is_speeding_up = is_speeding_up
-	rotation_dir = 0
-	velocity = Vector2()
-	if Input.is_action_pressed("up"):
-		is_speeding_up = true
-	elif Input.is_action_just_released("up"):
-		is_speeding_up = false
-		ship_turn_right = false
-		ship_turn_left = false
-	if Input.is_action_pressed("right") and Input.is_action_pressed("up"):
-		ship_turn_right = true
-	elif Input.is_action_just_released("right"):
-		ship_turn_right = false
-	if Input.is_action_pressed("left") and Input.is_action_pressed("up"):
-		ship_turn_left = true
-	elif Input.is_action_just_released("left"):
-		ship_turn_left = false
 
 func _process(delta: float) -> void:
-	if is_network_master():
+#	if get_tree().has_network_peer():
+#		if is_network_master() and visible:
+			
+	if is_network_master() and visible:	
 		
-	#Bewegungssteuerung über WASD direkt
-		#var x_input = int(Input.is_action_pressed("right")) - int(Input.is_action_pressed("left"))
-		#var y_input = int(Input.is_action_pressed("down")) - int(Input.is_action_pressed("up"))
-		#velocity = Vector2(x_input, y_input).normalized()
-		#look_at(get_global_mouse_position())
+#		if cannon_fire_sound.playing and first_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
+#		elif cannon_fire_sound.playing and second_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
+#		elif cannon_fire_sound.playing and third_shot_timer.time_left == 0:
+#			cannon_fire_sound.stop()
 		
-	# Mit Q oder E schießen
+		# Mit Q oder E schießen
 		if Input.is_action_pressed("click") and can_shoot and not is_reloading:
 				rpc("instance_cannon_ball", get_tree().get_network_unique_id())
+				
+			# Cannonsounds werden abgespielt
+				first_shot_timer.start()
+				second_shot_timer.start()
+				third_shot_timer.start()
+
 				is_reloading = true
 				reload_timer.start()
-	#Bewegungssteurung relativ zur Rotation
-		get_input()
-		rotation += rotation_dir * rotation_speed * delta
-		is_speeding_up = is_speeding_up
-		
-	# Gleichmäßige Beschleunigung und Abbremsen
-		if is_speeding_up:
-			speed = speed+1
-			if speed > 250:
-				speed = 250
+
+		# Steuerung der Beschleunigung
+		if Input.is_action_pressed("up") or Input.is_action_pressed("down"):
+			if speed < 250:
+				speed = speed + 1
 		else:
-			speed = speed-3
-			if speed < 0:
+			if speed <= 0:
 				speed = 0
-	# Gleichmäßge Schiffswendung
-		if ship_turn_right:
-			rotation_velocity = rotation_velocity+0.006
-			rotate(rotation_velocity)
-			if rotation_velocity > 1.5:
-				rotation_velocity = 1.5
+			else:
+				speed = speed - 5
+		
+		# Steuerung nach rechts
+		if Input.is_action_pressed("right"):
+			if rotation_velocity < 1.5:
+				rotation_velocity = rotation_velocity + 0.006
+				rotate(rotation_velocity)
 		else:
-			rotation_velocity = rotation_velocity-0.005
-			rotate(rotation_velocity)
 			if rotation_velocity < 0:
 				rotation_velocity = 0
-		if ship_turn_left:
-			rotation_velocity = rotation_velocity-0.006
-			rotate(rotation_velocity)
-			if rotation_velocity < -1.5:
-				rotation_velocity = -1.5
+			else:
+				rotation_velocity = rotation_velocity - 0.005
+				#rotate(rotation_velocity)
+		
+		# Steuerung nach links
+		if Input.is_action_pressed("left"):
+			if rotation_velocity > -1.5:
+				rotation_velocity = rotation_velocity - 0.006
+				rotate(rotation_velocity)
 		else:
-			rotation_velocity = rotation_velocity+0.005
-			rotate(rotation_velocity)
 			if rotation_velocity > 0:
 				rotation_velocity = 0
-		
+			else:
+				rotation_velocity = rotation_velocity + 0.005
+				#rotate(rotation_velocity)
+
 		velocity = Vector2(speed, 0).rotated(rotation)
 		velocity = move_and_slide(velocity)
+#
+#	
+	else:
+		rotation_degrees = lerp(rotation_degrees, puppet_rotation, delta * 8)
 	
-# KP, war vorher schon drin 
-	#else:
-		#rotation_degrees = lerp(rotation_degrees, puppet_rotation, delta * 8)
+	if health_points <= 0:
+		if get_tree().is_network_server():
+			rpc("destroy")
 		
 		#if not tween.is_active():
 			#move_and_slide(puppet_velocity * speed)
@@ -130,39 +147,105 @@ sync func instance_cannon_ball(id):
 	player_cannon_ball_instance_left_front.set_network_master(id)
 	player_cannon_ball_instance_left_front.player_rotation = rotation-rand_range(1, 2)
 	player_cannon_ball_instance_left_front.player_owner = id
-	
+
 	var player_cannon_ball_instance_left_mid = Global.instance_node_at_location(cannon_ball, Persistent_nodes, shoot_point_left.global_position)
 	player_cannon_ball_instance_left_mid.name = "Cannonball_Left_Middle" + name + str(Network.networked_object_name_index)
 	player_cannon_ball_instance_left_mid.set_network_master(id)
 	player_cannon_ball_instance_left_mid.player_rotation = rotation-rand_range(1, 2)
 	player_cannon_ball_instance_left_mid.player_owner = id
-	
+
 	var player_cannon_ball_instance_left_back = Global.instance_node_at_location(cannon_ball, Persistent_nodes, shoot_point_left.global_position)
 	player_cannon_ball_instance_left_back.name = "Cannonball_Left_Back" + name + str(Network.networked_object_name_index)
 	player_cannon_ball_instance_left_back.set_network_master(id)
 	player_cannon_ball_instance_left_back.player_rotation = rotation-rand_range(1, 2)
 	player_cannon_ball_instance_left_back.player_owner = id
-	
+
 	var player_cannon_ball_instance_right_top = Global.instance_node_at_location(cannon_ball, Persistent_nodes, shoot_point_right.global_position)
 	player_cannon_ball_instance_right_top.name = "Cannonball_Right_Top" + name + str(Network.networked_object_name_index)
 	player_cannon_ball_instance_right_top.set_network_master(id)
 	player_cannon_ball_instance_right_top.player_rotation = rotation+rand_range(1, 2)
 	player_cannon_ball_instance_right_top.player_owner = id
-	
+
 	var player_cannon_ball_instance_right_mid = Global.instance_node_at_location(cannon_ball, Persistent_nodes, shoot_point_right.global_position)
 	player_cannon_ball_instance_right_mid.name = "Cannonball_Right_Middle" + name + str(Network.networked_object_name_index)
 	player_cannon_ball_instance_right_mid.set_network_master(id)
 	player_cannon_ball_instance_right_mid.player_rotation = rotation+rand_range(1, 2)
 	player_cannon_ball_instance_right_mid.player_owner = id
-	
+
 	var player_cannon_ball_instance_right_back = Global.instance_node_at_location(cannon_ball, Persistent_nodes, shoot_point_right.global_position)
 	player_cannon_ball_instance_right_back.name = "Cannonball_Right_Back" + name + str(Network.networked_object_name_index)
 	player_cannon_ball_instance_right_back.set_network_master(id)
 	player_cannon_ball_instance_right_back.player_rotation = rotation+rand_range(1, 2)
 	player_cannon_ball_instance_right_back.player_owner = id
 	
+	
+	
+
 	Network.networked_object_name_index += 1
 
+sync func update_position(pos):
+	global_position = pos
+	puppet_position = pos
 
 func _on_Reload_timer_timeout():
 	is_reloading = false
+
+func _on_First_shot_timer_timeout():
+	cannon_fire_sound.set_pitch_scale(rand_range(1, 1.2))
+	cannon_fire_sound.play()
+	#first_shot_timer.stop()
+
+func _on_Second_shot_timer_timeout():
+	cannon_fire_sound.set_pitch_scale(rand_range(0.8, 0.9))
+	cannon_fire_sound.play()
+	#second_shot_timer.stop()
+
+func _on_Third_shot_timer_timeout():
+	cannon_fire_sound.set_pitch_scale(rand_range(0.6, 0.7))
+	cannon_fire_sound.play()
+	#third_shot_timer.stop()
+
+
+func set_health_points(new_value):
+	health_points = new_value
+	
+	if is_network_master():
+		rset("puppet_health_points", health_points)
+
+func puppet_health_points_set(new_value):
+	puppet_health_points = new_value
+	
+	if not is_network_master():
+		health_points = puppet_health_points
+
+func _on_Hit_timer_timeout():
+	modulate = Color(1, 1, 1, 1)
+
+
+func _on_Hitbox_area_entered(area):
+	if get_tree().is_network_server():
+		if area.is_in_group("Ship_destroyer") and area.get_parent().player_owner != int(name):
+			rpc("hit_by_cannon_ball", area.get_parent().damage)
+			
+			area.get_parent().rpc("destroy")
+
+sync func hit_by_cannon_ball(damage):
+	health_points -= damage
+	modulate = Color(1, 0, 0, 1)
+	hit_timer.start()
+
+
+sync func destroy() -> void:
+	visible = false
+	$CollisionShape2D.disabled = true
+	$Hitbox/CollisionShape2D.disabled = true
+	#Global.alive_players.erase(self)
+	
+	if is_network_master():
+		Global.player_master = null
+		
+func _exit_tree() -> void:
+	#Global.alive_players.erase(self)
+	if is_network_master():
+		Global.player_master = null
+
