@@ -18,6 +18,7 @@ var can_shoot = true
 var is_reloading = false
 #var shot_number = 0
 
+var game_over = false
 
 export (float) var rotation_speed = 1.5
 
@@ -40,7 +41,7 @@ puppet var puppet_rotation = 0
 
 func _ready():
 	
-	#Global.alive_players.append(self)
+	Global.alive_players.append(self)
 	
 	yield(get_tree(), "idle_frame")
 	if is_network_master():
@@ -239,13 +240,14 @@ sync func destroy() -> void:
 	visible = false
 	$CollisionShape2D.disabled = true
 	$Hitbox/CollisionShape2D.disabled = true
-	#Global.alive_players.erase(self)
+	Global.alive_players.erase(self)
+	game_over = true
 	
 	if is_network_master():
 		Global.player_master = null
 		
 func _exit_tree() -> void:
-	#Global.alive_players.erase(self)
+	Global.alive_players.erase(self)
 	if is_network_master():
 		Global.player_master = null
 
