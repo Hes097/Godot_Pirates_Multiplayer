@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/sea-and-seagull-wave.mp3-0e109cd8dbe97e43ceb16dc8358aa1c6.mp3str"
+
+[deps]
+
+source_file="res://Sounds/sea-and-seagull-wave.mp3"
+dest_files=[ "res://.import/sea-and-seagull-wave.mp3-0e109cd8dbe97e43ceb16dc8358aa1c6.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0
